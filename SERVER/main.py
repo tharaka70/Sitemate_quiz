@@ -41,6 +41,7 @@ class Issue(CreateIssue):
     id: int
 
 
+# initializing fast api app.
 app = FastAPI()
 
 # Endpoint to get issue by id
@@ -109,8 +110,8 @@ async def delete_issue_by_id(
         detail="Invalid issue id. Cannot dekete",
         )
         
-    delete_issue = issues_db.pop(issue_index)
+    deleted_issue = issues_db.pop(issue_index)
    
-    return delete_issue
+    return deleted_issue
 
 
