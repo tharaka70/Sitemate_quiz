@@ -32,10 +32,13 @@ issues_db = [
 ]
 
 #pydantic schemas for validation
-class Issue(BaseModel):
-    id: int
+
+class CreateIssue(BaseModel):
     title: str
     description: str
+
+class Issue(CreateIssue):
+    id: int
 
 
 app = FastAPI()
@@ -57,4 +60,16 @@ async def get_issue_by_id(
 @app.get("/issues", response_model=list[Issue])
 async def get_issues():
     return issues_db
+
+# endpoint to create issues
+@app.post("/issue", response_model=Issue)
+async def get_issue_by_id(
+    issue_data : CreateIssue
+):
+    last_issue_id = issues_db[-1]["id"]
+    new_issue = issue_data.__dict__
+    new_issue["id"] = last_issue_id + 1
+    issues_db.append(new_issue)
+    return issues_db[-1]
+
 
