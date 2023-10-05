@@ -3,18 +3,21 @@ import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const [issues, setIssues] = useState([]);
+  const [issue, setIssue] = useState([]);
 
   const router = useRouter()
 
+  const {id} = router.query;
+
   useEffect(() => {
     // Fetch data from the endpoint
-    fetch('http://127.0.0.1:8000/issues')
+    fetch(`http://127.0.0.1:8000/issue/${id}`)
       .then(response => response.json())
-      .then(data => setIssues(data))
+      .then(data => setIssue(data))
       .catch(error => console.error('Error:', error));
   }, []);
 
@@ -50,7 +53,7 @@ export default function Home() {
   }
 
   const viewIssue = (issue) =>{
-    router.push(`/issue?id=${issue.id}`);
+    router.push('/issue');
   }
 
   
@@ -58,18 +61,18 @@ export default function Home() {
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
     >
-    <h1 className='text-neutral-400'>All ISSUES</h1>
+    
     <div className='text-neutral-400'>
+    <h1 className='text-neutral-400'>ISSUE : {issue.title}</h1>
+    <p>----------------------------</p>
       <ul>
-        {issues.map(issue => (
           <li key={issue.id}>
             <p  className='text-neutral-400'><span  className='text-neutral-200'>Issue Id :</span>{issue.id}</p>
             <p className='text-neutral-400'><span  className='text-neutral-200'>Title :</span>{issue.title}</p>
             <p  className='text-neutral-400'><span  className='text-neutral-200'>Description :</span>{issue.description}</p>
-            <button onClick={() => viewIssue(issue)}  className='text-green-400  hover:text-green-200'>View</button> <button  className='text-blue-400  hover:text-blue-200'>Edit</button> <button onClick={() => deleteIssue(issue.id)} className='text-red-400 hover:text-red-200'>Delete</button>
+            <button  className='text-blue-400  hover:text-blue-200'>Edit</button> <button onClick={() => deleteIssue(issue.id)} className='text-red-400 hover:text-red-200'>Delete</button>
             <p className='text-neutral-400'>-----------------------------</p>
           </li>
-        ))}
       </ul>
     </div>
    
