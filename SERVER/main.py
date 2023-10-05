@@ -63,7 +63,7 @@ async def get_issues():
 
 # endpoint to create issues
 @app.post("/issue", response_model=Issue)
-async def get_issue_by_id(
+async def create_issue(
     issue_data : CreateIssue
 ):
     last_issue_id = issues_db[-1]["id"]
@@ -74,7 +74,7 @@ async def get_issue_by_id(
 
 # endpoint to modify a given issue
 @app.put("/issue", response_model=Issue)
-async def get_issue_by_id(
+async def modify_given_issue(
     issue_data : Issue
 ):  
     issue_index = -1
@@ -92,5 +92,25 @@ async def get_issue_by_id(
     issues_db[issue_index]['description'] = issue_data.description
    
     return issues_db[issue_index]
+
+# endpoint to delete a given issue
+@app.delete("/issue/{issue_id}", response_model=Issue)
+async def delete_issue_by_id(
+    issue_id : int
+):  
+    issue_index = -1
+    for issue in issues_db:
+        if issue['id'] == issue_id:
+            issue_index = issues_db.index(issue)
+
+    if issue_index < 0:
+        raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Invalid issue id. Cannot dekete",
+        )
+        
+    delete_issue = issues_db.pop(issue_index)
+   
+    return delete_issue
 
 
