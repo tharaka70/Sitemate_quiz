@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 # Fake DB for issues | Hardcoded for now since we are not using a DB
 issues_db = [
@@ -43,6 +44,17 @@ class Issue(CreateIssue):
 
 # initializing fast api app.
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # Endpoint to get issue by id
 @app.get("/issue/{issue_id}", response_model=Issue)
