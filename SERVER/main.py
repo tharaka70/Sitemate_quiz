@@ -40,14 +40,21 @@ class Issue(BaseModel):
 
 app = FastAPI()
 
+# Endpoint to get issue by id
 @app.get("/issue/{issue_id}", response_model=Issue)
-async def read_users_me(
+async def get_issue_by_id(
     issue_id : int
 ):
     filtered_issue = [issue for issue in issues_db if issue['id'] == issue_id ]
     if len(filtered_issue) == 0:
-        HTTPException(
+        raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="Invalid Issue id.",
         )
     return filtered_issue[0]
+
+# Endpoint to get all issues
+@app.get("/issues", response_model=list[Issue])
+async def get_issues():
+    return issues_db
+
