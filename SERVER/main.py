@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel
 
 # Fake DB for issues | Hardcoded for now since we are not using a DB
 issues_db = [
@@ -30,4 +31,13 @@ issues_db = [
     }
 ]
 
+#pydantic schemas for validation
+class Issue(BaseModel):
+    id: int
+    title: str
+    description: str
+
+
 app = FastAPI()
+
+
