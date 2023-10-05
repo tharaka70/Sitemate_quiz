@@ -72,4 +72,25 @@ async def get_issue_by_id(
     issues_db.append(new_issue)
     return issues_db[-1]
 
+# endpoint to modify a given issue
+@app.put("/issue", response_model=Issue)
+async def get_issue_by_id(
+    issue_data : Issue
+):  
+    issue_index = -1
+    for issue in issues_db:
+        if issue['id'] == issue_data.id:
+            issue_index = issues_db.index(issue)
+
+    if issue_index < 0:
+        raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Invalid issue id to modify",
+        )
+        
+    issues_db[issue_index]['title'] = issue_data.title
+    issues_db[issue_index]['description'] = issue_data.description
+   
+    return issues_db[issue_index]
+
 
